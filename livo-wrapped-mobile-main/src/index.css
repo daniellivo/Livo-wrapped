@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Livo Wrapped Design System
+   Background: #114454 100%
+   Lines: #36C3A0 50%
+   Cards: #F6F5F4 100%
+*/
+
+@layer base {
+  :root {
+    /* Background: #114454 → HSL(194, 66%, 20%) */
+    --background: 194 66% 20%;
+    --foreground: 0 0% 100%;
+
+    /* Card: #F6F5F4 → HSL(30, 11%, 96%) */
+    --card: 30 11% 96%;
+    --card-foreground: 194 66% 20%;
+
+    --popover: 30 11% 96%;
+    --popover-foreground: 194 66% 20%;
+
+    /* Primary: #36C3A0 → HSL(165, 57%, 49%) */
+    --primary: 165 57% 49%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 30 11% 96%;
+    --secondary-foreground: 194 66% 20%;
+
+    --muted: 194 40% 30%;
+    --muted-foreground: 0 0% 70%;
+
+    --accent: 165 57% 49%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 194 30% 35%;
+    --input: 194 30% 35%;
+    --ring: 165 57% 49%;
+
+    --radius: 1rem;
+    
+    --livo-green: 165 57% 49%;
+    --livo-teal: 194 66% 20%;
+    --livo-cream: 30 11% 96%;
+
+    --sidebar-background: 194 66% 20%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 165 57% 49%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 194 40% 30%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 194 30% 35%;
+    --sidebar-ring: 165 57% 49%;
+  }
+
+  .dark {
+    --background: 194 66% 20%;
+    --foreground: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+  
+  #root {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+}
+
+/* Animation for lines movement effect */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(2deg);
+  }
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}

@@ -8,7 +8,7 @@ import LivoLines from '@/components/LivoLines';
 import ProgressDots from '@/components/ProgressDots';
 import StatCard from '@/components/StatCard';
 import ShareButtons from '@/components/ShareButtons';
-import { IconChartBar, IconFlame, IconBuilding, IconHeart, IconHeartbeat } from '@tabler/icons-react';
+import { IconChartBar, IconFlame, IconBuilding, IconHeart } from '@tabler/icons-react';
 import enfermeraNoctambula from '@/assets/enfermera-noctambula.png';
 import livoLogo from '@/assets/livo-logo.svg';
 import { UserData } from '@/types/user';
@@ -185,9 +185,10 @@ const Index = () => {
             <p className="text-center text-white/50 text-sm mb-4 opacity-0 animate-fade-in font-medium tracking-wide uppercase">Tu año en cifras</p>
 
             <SlideCard delay={100}>
-              <p className="text-base text-card-foreground">
-                Te uniste a Livo en <span className="font-bold text-primary">Diciembre</span>
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-base text-card-foreground">Te uniste a Livo en</p>
+                <span className="text-xl font-bold gradient-text">Diciembre</span>
+              </div>
             </SlideCard>
 
             <SlideCard delay={200}>
@@ -212,12 +213,9 @@ const Index = () => {
             </SlideCard>
 
             <SlideCard delay={500}>
-              <div className="flex items-center gap-3">
-                <IconHeartbeat size={24} className="text-primary" />
-                <div>
-                  <p className="text-sm text-card-foreground/60 font-medium">Tu especialidad</p>
-                  <p className="text-lg font-bold text-card-foreground">{userData.most_common_specialization}</p>
-                </div>
+              <div className="flex items-center justify-between">
+                <p className="text-base text-card-foreground">Tu especialidad</p>
+                <span className="text-xl font-bold gradient-text">{userData.most_common_specialization}</span>
               </div>
             </SlideCard>
           </div>
@@ -296,13 +294,9 @@ const Index = () => {
             </SlideCard>
 
             <SlideCard delay={200}>
-              <div className="text-center">
-                <p className="text-sm text-card-foreground/60 mb-1">Tu especialidad favorita</p>
-                <p className="text-2xl font-bold text-card-foreground">{userData.most_common_specialization}</p>
-                <div className="flex items-center justify-center gap-2 mt-2 text-sm text-card-foreground/60">
-                  <IconHeartbeat size={16} className="text-primary" />
-                  <span>{userData.total_shifts} turnos realizados</span>
-                </div>
+              <div className="flex items-center justify-between">
+                <p className="text-base text-card-foreground">Tu especialidad favorita</p>
+                <span className="text-xl font-bold gradient-text">{userData.most_common_specialization}</span>
               </div>
             </SlideCard>
 
@@ -333,26 +327,33 @@ const Index = () => {
 
             <SlideCard delay={100}>
               <div className="flex items-center justify-between">
-                <p className="text-base text-card-foreground">Turnos de noche</p>
-                <span className="text-3xl font-bold gradient-text">{userData.night_shifts}</span>
+                <p className="text-base text-card-foreground">Turnos de mañana</p>
+                <span className="text-3xl font-bold gradient-text">{userData.morning_shifts}</span>
               </div>
             </SlideCard>
 
             <SlideCard delay={200}>
               <div className="flex items-center justify-between">
-                <p className="text-base text-card-foreground">Turnos de día</p>
-                <span className="text-3xl font-bold gradient-text">{userData.morning_shifts + userData.evening_shifts}</span>
+                <p className="text-base text-card-foreground">Turnos de tarde</p>
+                <span className="text-3xl font-bold gradient-text">{userData.evening_shifts}</span>
               </div>
             </SlideCard>
 
-            <SlideCard variant="highlight" delay={300}>
+            <SlideCard delay={300}>
+              <div className="flex items-center justify-between">
+                <p className="text-base text-card-foreground">Turnos de noche</p>
+                <span className="text-3xl font-bold gradient-text">{userData.night_shifts}</span>
+              </div>
+            </SlideCard>
+
+            <SlideCard variant="highlight" delay={400}>
               <div className="text-center">
                 <p className="text-sm opacity-80">Tu día favorito</p>
                 <p className="text-2xl font-bold mt-1">{userData.most_common_day.toLowerCase()}</p>
               </div>
             </SlideCard>
 
-            <SlideCard delay={400}>
+            <SlideCard delay={500}>
               <div>
                 <p className="text-sm text-card-foreground/60">Horario preferido</p>
                 <p className="text-base font-semibold text-card-foreground">{userData.preferred_time.toLowerCase()}</p>

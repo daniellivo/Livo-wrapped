@@ -9,7 +9,6 @@ import ProgressDots from '@/components/ProgressDots';
 import StatCard from '@/components/StatCard';
 import ShareButtons from '@/components/ShareButtons';
 import { IconChartBar, IconFlame, IconBuilding, IconHeart } from '@tabler/icons-react';
-import enfermeraNoctambula from '@/assets/enfermera-noctambula.png';
 import livoLogo from '@/assets/livo-logo.svg';
 import { UserData } from '@/types/user';
 
@@ -21,6 +20,9 @@ const Index = () => {
   const totalSlides = 10;
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  
+  // Estado para la variante de enfermera (1-4)
+  const [nurseVariant, setNurseVariant] = useState(1);
   
   // Estados para el webhook
   const [isLoading, setIsLoading] = useState(true);
@@ -70,6 +72,22 @@ const Index = () => {
     callWebhook(encodedId);
   }, [searchParams, navigate]);
 
+  // Función para obtener la URL de la enfermera con la variante actual
+  const getNurseImageUrl = (originalUrl: string, variant: number): string => {
+    // Extraer el número del bucket del URL original (ej: "6.1.png" -> "6")
+    const match = originalUrl.match(/\/(\d+)\.\d+\.png$/);
+    if (match) {
+      const bucketNumber = match[1];
+      return `https://raw.githubusercontent.com/daniellivo/Livo-wrapped/refs/heads/main/livo-wrapped-mobile-main/Wrapped-Characters/${bucketNumber}.${variant}.png`;
+    }
+    return originalUrl;
+  };
+
+  // Función para cambiar la variante de enfermera (cicla 1 -> 2 -> 3 -> 4 -> 1)
+  const handleChangeNurse = () => {
+    setNurseVariant((prev) => (prev % 4) + 1);
+  };
+
   // Loading state
   if (isLoading) {
     return (
@@ -109,6 +127,11 @@ const Index = () => {
         </div>
         <LivoLogo />
         <div className="relative z-10 text-center max-w-md px-6">
+          <img
+            src="https://raw.githubusercontent.com/daniellivo/Livo-wrapped/refs/heads/main/livo-wrapped-mobile-main/Wrapped-Characters/7.1.png"
+            alt="Enfermera confusa"
+            className="w-40 h-40 mx-auto mb-6 object-contain"
+          />
           <p className="text-white text-xl mb-4">Oops, algo salió mal</p>
           <p className="text-white/70 mb-6">{error || 'No se pudieron cargar tus datos'}</p>
           <button
@@ -425,8 +448,8 @@ const Index = () => {
                   {/* Character illustration */}
                   <div className="relative mb-3" style={{ opacity: 1 }}>
                     <img
-                      src={enfermeraNoctambula}
-                      alt="Enfermera noctámbula"
+                      src={getNurseImageUrl(userData.bucket_image_url, nurseVariant)}
+                      alt={userData.bucket}
                       style={{
                         width: '160px',
                         height: '160px',
@@ -493,6 +516,14 @@ const Index = () => {
               </div>
             </div>
           </div>
+
+          {/* Botón para cambiar variante de enfermera */}
+          <button
+            onClick={handleChangeNurse}
+            className="mt-4 mb-2 px-6 py-2 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white rounded-full text-sm font-medium transition-all duration-200 border border-white/20 hover:border-white/40"
+          >
+            ✨ Cambiar enfermera
+          </button>
 
           {/* Share buttons (not included in screenshot) */}
           <ShareButtons cardRef={cardRef} />

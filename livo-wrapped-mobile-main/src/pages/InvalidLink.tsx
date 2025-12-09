@@ -21,12 +21,12 @@ const InvalidLink = () => {
 
       <div className="relative z-10 flex min-h-screen items-center justify-center px-6">
         <div className="text-center max-w-md space-y-6">
-          {/* Placeholder image */}
+          {/* Confused nurse image */}
           <div className="flex justify-center mb-6">
             <img
-              src="/placeholder.svg"
-              alt="Placeholder"
-              className="w-64 h-64 object-contain opacity-80"
+              src="https://raw.githubusercontent.com/daniellivo/Livo-wrapped/refs/heads/main/livo-wrapped-mobile-main/Wrapped-Characters/7.1.png"
+              alt="Enfermera confusa"
+              className="w-48 h-48 object-contain"
             />
           </div>
 

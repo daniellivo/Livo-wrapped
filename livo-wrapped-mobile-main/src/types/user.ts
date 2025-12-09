@@ -18,5 +18,6 @@ export interface UserData {
   morning_shifts: number;
   evening_shifts: number;
   preferred_time: string;
+  bucket_image_url: string;
 }
 

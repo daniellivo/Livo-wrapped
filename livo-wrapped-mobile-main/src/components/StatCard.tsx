@@ -26,33 +26,34 @@ const StatCard = ({
   if (compact) {
     return (
       <div 
-        className={cn(
-          "rounded-2xl p-3 flex flex-col gap-1.5 transition-all duration-200",
-          highlight 
-            ? "bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30" 
-            : "bg-[#114454]/10 border border-[#114454]/10",
-          animationClass
-        )}
-        style={delayStyle}
+        className="rounded-2xl p-3 flex flex-col gap-1.5"
+        style={{ 
+          opacity: 1,
+          backgroundColor: highlight ? 'rgba(54, 195, 160, 0.15)' : 'rgba(17, 68, 84, 0.1)',
+          border: highlight ? '1px solid rgba(54, 195, 160, 0.3)' : '1px solid rgba(17, 68, 84, 0.1)',
+        }}
       >
         <div className="flex items-center gap-2">
-          <div className={cn(
-            "p-1 rounded-lg",
-            highlight ? "bg-primary/20 text-primary" : "bg-[#114454]/10 text-primary"
-          )}>
+          <div 
+            className="p-1 rounded-lg"
+            style={{
+              backgroundColor: highlight ? 'rgba(54, 195, 160, 0.2)' : 'rgba(17, 68, 84, 0.1)',
+              color: '#36C3A0',
+            }}
+          >
             {icon}
           </div>
-          <span className={cn(
-            "text-lg font-bold",
-            highlight ? "gradient-text" : "text-[#114454]"
-          )}>
+          <span 
+            className="text-lg font-bold"
+            style={{ color: highlight ? '#36C3A0' : '#114454' }}
+          >
             {value}
           </span>
         </div>
-        <p className={cn(
-          "text-[10px] font-medium uppercase tracking-wider",
-          highlight ? "text-primary/70" : "text-[#114454]/50"
-        )}>
+        <p 
+          className="text-[10px] font-medium uppercase tracking-wider"
+          style={{ color: highlight ? 'rgba(54, 195, 160, 0.7)' : 'rgba(17, 68, 84, 0.5)' }}
+        >
           {label}
         </p>
       </div>

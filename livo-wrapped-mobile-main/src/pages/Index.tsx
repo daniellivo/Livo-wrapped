@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Slider from '@/components/Slider';
 import SlideContent from '@/components/SlideContent';
 import SlideCard from '@/components/SlideCard';
@@ -11,10 +12,64 @@ import { IconChartBar, IconFlame, IconBuilding, IconHeart, IconHeartbeat } from 
 import enfermeraNoctambula from '@/assets/enfermera-noctambula.png';
 import livoLogo from '@/assets/livo-logo.svg';
 
+const WEBHOOK_URL = 'https://livomarketing.app.n8n.cloud/webhook/e1c955cd-b1a5-4d0c-a023-a876f9a648c3';
+
 const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const cardRef = useRef<HTMLDivElement>(null);
   const totalSlides = 10;
+  const [searchParams] = useSearchParams();
+  
+  // Estados para el webhook
+  const [isLoading, setIsLoading] = useState(false);
+  const [encodedUserId, setEncodedUserId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Función para llamar al webhook
+  const callWebhook = async (userId: string) => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ENCODED_USER_ID: userId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error en la respuesta del servidor: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // El webhook devuelve el mismo ENCODED_USER_ID validado
+      if (data.ENCODED_USER_ID) {
+        setEncodedUserId(data.ENCODED_USER_ID);
+      } else {
+        setEncodedUserId(userId);
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Error desconocido al llamar al webhook';
+      setError(errorMessage);
+      console.error('Error al llamar al webhook:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Ejecutar llamada al webhook cuando se carga la página
+  useEffect(() => {
+    const userId = searchParams.get('ENCODED_USER_ID');
+    
+    if (userId) {
+      callWebhook(userId);
+    }
+  }, [searchParams]);
 
   return (
     <div className="w-screen h-screen bg-background overflow-hidden relative">
@@ -280,87 +335,108 @@ const Index = () => {
 
         {/* Slide 10 - Final Result Card (Optimized for Instagram Stories 9:16) */}
         <SlideContent>
+          {/* Wrapper para captura - dimensiones fijas para exportación */}
           <div
             ref={cardRef}
-            className="w-full max-w-[320px] mx-auto rounded-[2rem] overflow-hidden shadow-2xl relative"
             style={{
               background: '#F6F5F4',
-              padding: '1.25rem',
-              aspectRatio: '9/16',
-              maxHeight: '70vh',
+              padding: '16px',
+              borderRadius: '2rem',
+              width: '352px', // 320px card + 32px padding (16px cada lado)
+              height: '720px', // Altura fija para aspect ratio ~9:18
             }}
           >
-            {/* Logo top left */}
-            <img
-              src={livoLogo}
-              alt="Livo"
-              className="absolute top-3 left-3 h-4 w-auto opacity-0 animate-fade-in z-20"
-            />
+            <div
+              className="rounded-[2rem] overflow-hidden shadow-2xl relative"
+              style={{
+                background: '#F6F5F4',
+                padding: '1.25rem',
+                width: '320px',
+                height: '688px', // 720px - 32px padding
+              }}
+            >
+              {/* Logo top left */}
+              <img
+                src={livoLogo}
+                alt="Livo"
+                className="absolute top-3 left-3 h-4 w-auto z-20"
+                style={{ opacity: 1 }}
+              />
 
-            {/* Inner content for sharing */}
-            <div className="relative flex flex-col items-center h-full justify-between">
-              {/* Spacer for logo */}
-              <div className="h-2" />
+              {/* Inner content for sharing */}
+              <div className="relative flex flex-col items-center h-full justify-between">
+                {/* Spacer for logo - más espacio arriba */}
+                <div className="h-8" />
 
-              {/* Middle section: Character + Title */}
-              <div className="flex flex-col items-center flex-1 justify-center py-2">
-                {/* Character illustration */}
-                <div className="relative mb-3 opacity-0 animate-bounce-in" style={{ animationDelay: '200ms' }}>
-                  <img
-                    src={enfermeraNoctambula}
-                    alt="Enfermera noctámbula"
-                    className="w-40 h-40 object-contain relative z-10"
-                  />
+                {/* Middle section: Character + Title */}
+                <div className="flex flex-col items-center flex-1 justify-center py-4">
+                  {/* Character illustration */}
+                  <div className="relative mb-3" style={{ opacity: 1 }}>
+                    <img
+                      src={enfermeraNoctambula}
+                      alt="Enfermera noctámbula"
+                      style={{
+                        width: '160px',
+                        height: '160px',
+                        objectFit: 'contain',
+                        position: 'relative',
+                        zIndex: 10,
+                      }}
+                    />
+                  </div>
+
+                  {/* Name */}
+                  <h2 className="text-base font-semibold text-[#114454] mb-0.5 tracking-wide" style={{ opacity: 1 }}>
+                    María
+                  </h2>
+
+                  {/* Title - color sólido para compatibilidad con html2canvas */}
+                  <h3 
+                    className="text-lg font-bold mb-1.5 text-center" 
+                    style={{ opacity: 1, color: '#36C3A0' }}
+                  >
+                    Enfermera Noctámbula 🌙
+                  </h3>
+
+                  {/* Quote */}
+                  <p className="text-center text-xs text-[#114454]/60 px-4 italic" style={{ opacity: 1 }}>
+                    "Cuando la ciudad duerme, tú sostienes la guardia del cuidado."
+                  </p>
                 </div>
 
-                {/* Name */}
-                <h2 className="text-base font-semibold text-[#114454] mb-0.5 opacity-0 animate-fade-up tracking-wide" style={{ animationDelay: '400ms' }}>
-                  María
-                </h2>
-
-                {/* Title with gradient */}
-                <h3 className="text-lg font-bold gradient-text mb-1.5 opacity-0 animate-fade-up text-center" style={{ animationDelay: '500ms' }}>
-                  Enfermera Noctámbula 🌙
-                </h3>
-
-                {/* Quote */}
-                <p className="text-center text-xs text-[#114454]/60 px-4 opacity-0 animate-fade-up italic" style={{ animationDelay: '600ms' }}>
-                  "Cuando la ciudad duerme, tú sostienes la guardia del cuidado."
-                </p>
-              </div>
-
-              {/* Bottom section: Stats grid */}
-              <div className="w-full">
-                <div className="grid grid-cols-2 gap-2 w-full opacity-0 animate-scale-in" style={{ animationDelay: '700ms' }}>
-                  <StatCard
-                    icon={<IconChartBar size={16} />}
-                    value="Top 4%"
-                    label="Ranking"
-                    highlight
-                    animate={false}
-                    compact
-                  />
-                  <StatCard
-                    icon={<IconFlame size={16} />}
-                    value="180"
-                    label="Turnos"
-                    animate={false}
-                    compact
-                  />
-                  <StatCard
-                    icon={<IconBuilding size={16} />}
-                    value="3"
-                    label="Centros"
-                    animate={false}
-                    compact
-                  />
-                  <StatCard
-                    icon={<IconHeart size={16} />}
-                    value="4"
-                    label="Especialidades"
-                    animate={false}
-                    compact
-                  />
+                {/* Bottom section: Stats grid */}
+                <div className="w-full">
+                  <div className="grid grid-cols-2 gap-2 w-full" style={{ opacity: 1 }}>
+                    <StatCard
+                      icon={<IconChartBar size={16} />}
+                      value="Top 4%"
+                      label="Ranking"
+                      highlight
+                      animate={false}
+                      compact
+                    />
+                    <StatCard
+                      icon={<IconFlame size={16} />}
+                      value="180"
+                      label="Turnos"
+                      animate={false}
+                      compact
+                    />
+                    <StatCard
+                      icon={<IconBuilding size={16} />}
+                      value="3"
+                      label="Centros"
+                      animate={false}
+                      compact
+                    />
+                    <StatCard
+                      icon={<IconHeart size={16} />}
+                      value="4"
+                      label="Especialidades"
+                      animate={false}
+                      compact
+                    />
+                  </div>
                 </div>
               </div>
             </div>

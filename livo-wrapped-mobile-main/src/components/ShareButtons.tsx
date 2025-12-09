@@ -13,16 +13,18 @@ const ShareButtons = ({ cardRef }: ShareButtonsProps) => {
   const generateImage = async (): Promise<Blob | null> => {
     if (!cardRef.current) {
       console.error('Ref not found');
+      toast.error('Error: No se encontró la card para capturar');
       return null;
     }
 
     try {
       console.log('Starting image generation...');
+      
       const canvas = await html2canvas(cardRef.current, {
         backgroundColor: '#F6F5F4',
-        scale: 2, // Higher quality
+        scale: 3, // Alta resolución para Stories de Instagram
         logging: false,
-        useCORS: true, // Important for external images
+        useCORS: true, // Importante para imágenes externas
         allowTaint: true,
       });
 
@@ -33,12 +35,14 @@ const ShareButtons = ({ cardRef }: ShareButtonsProps) => {
             resolve(blob);
           } else {
             console.error('Blob generation failed');
+            toast.error('Error al generar la imagen');
             resolve(null);
           }
         }, 'image/png', 1.0);
       });
     } catch (error) {
       console.error('Error generating image:', error);
+      toast.error('Error al generar la imagen');
       return null;
     }
   };
@@ -67,35 +71,11 @@ const ShareButtons = ({ cardRef }: ShareButtonsProps) => {
     try {
       const blob = await generateImage();
       if (!blob) {
-        toast.error('Error al generar la imagen');
-        return;
+        return; // Error ya manejado en generateImage
       }
 
-      const file = new File([blob], 'livo-wrapped.png', { type: 'image/png' });
-
-      // Try Web Share API first (for mobile "Save to Photos")
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          console.log('Attempting Web Share API for save...');
-          await navigator.share({
-            files: [file],
-            // No title/text to encourage "Save Image" option appearance
-          });
-          toast.success('¡Imagen lista para guardar!');
-        } catch (shareError) {
-          if ((shareError as Error).name !== 'AbortError') {
-            console.warn('Web Share API failed, falling back to download:', shareError);
-            downloadDirectly(blob);
-          } else {
-            // User cancelled, do nothing
-            console.log('User cancelled share');
-          }
-        }
-      } else {
-        // Fallback to direct download
-        console.log('Web Share API not supported, downloading directly...');
-        downloadDirectly(blob);
-      }
+      // Descargar directamente la imagen
+      downloadDirectly(blob);
     } catch (error) {
       console.error('Critical error in handleSaveImage:', error);
       toast.error('Error inesperado al guardar');
@@ -111,36 +91,13 @@ const ShareButtons = ({ cardRef }: ShareButtonsProps) => {
     try {
       const blob = await generateImage();
       if (!blob) {
-        throw new Error('No se pudo generar la imagen');
+        return; // Error ya manejado en generateImage
       }
 
-      const file = new File([blob], 'livo-wrapped.png', { type: 'image/png' });
-      const shareData: ShareData = {
-        files: [file],
-        title: 'Mi Livo Wrapped',
-        text: '¡Mira mi año con Livo! ✨',
-      };
-
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share(shareData);
-          toast.success('¡Compartido con éxito!');
-        } catch (shareError) {
-          if ((shareError as Error).name !== 'AbortError') {
-            throw shareError;
-          }
-        }
-      } else {
-        // Fallbacks
-        if (platform === 'whatsapp') {
-          window.open('https://wa.me/?text=¡Mira mi año con Livo! ✨', '_blank');
-          toast.info('La imagen se ha descargado. ¡Puedes adjuntarla manualmente!');
-          downloadDirectly(blob);
-        } else {
-          toast.info('Imagen guardada. ¡Súbela a tus Stories!');
-          downloadDirectly(blob);
-        }
-      }
+      // Por ahora solo descargamos la imagen
+      // Más adelante implementaremos el compartir
+      downloadDirectly(blob);
+      toast.info('Imagen guardada. ¡Puedes compartirla manualmente!');
     } catch (error) {
       console.error('Error al compartir:', error);
       toast.error('Hubo un error al procesar la imagen');

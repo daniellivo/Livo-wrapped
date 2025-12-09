@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import Slider from '@/components/Slider';
 import SlideContent from '@/components/SlideContent';
 import SlideCard from '@/components/SlideCard';
@@ -11,6 +11,7 @@ import ShareButtons from '@/components/ShareButtons';
 import { IconChartBar, IconFlame, IconBuilding, IconHeart, IconHeartbeat } from '@tabler/icons-react';
 import enfermeraNoctambula from '@/assets/enfermera-noctambula.png';
 import livoLogo from '@/assets/livo-logo.svg';
+import { UserData } from '@/types/user';
 
 const WEBHOOK_URL = 'https://livomarketing.app.n8n.cloud/webhook/e1c955cd-b1a5-4d0c-a023-a876f9a648c3';
 
@@ -19,10 +20,11 @@ const Index = () => {
   const cardRef = useRef<HTMLDivElement>(null);
   const totalSlides = 10;
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   
   // Estados para el webhook
-  const [isLoading, setIsLoading] = useState(false);
-  const [encodedUserId, setEncodedUserId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Función para llamar al webhook
@@ -37,7 +39,7 @@ const Index = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ENCODED_USER_ID: userId,
+          encoded_user_id: userId,
         }),
       });
 
@@ -45,14 +47,8 @@ const Index = () => {
         throw new Error(`Error en la respuesta del servidor: ${response.status}`);
       }
 
-      const data = await response.json();
-      
-      // El webhook devuelve el mismo ENCODED_USER_ID validado
-      if (data.ENCODED_USER_ID) {
-        setEncodedUserId(data.ENCODED_USER_ID);
-      } else {
-        setEncodedUserId(userId);
-      }
+      const data: UserData = await response.json();
+      setUserData(data);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error desconocido al llamar al webhook';
       setError(errorMessage);
@@ -64,12 +60,67 @@ const Index = () => {
 
   // Ejecutar llamada al webhook cuando se carga la página
   useEffect(() => {
-    const userId = searchParams.get('ENCODED_USER_ID');
+    const encodedId = searchParams.get('encodedId');
     
-    if (userId) {
-      callWebhook(userId);
+    if (!encodedId) {
+      navigate('/invalid');
+      return;
     }
-  }, [searchParams]);
+    
+    callWebhook(encodedId);
+  }, [searchParams, navigate]);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="w-screen h-screen bg-background overflow-hidden relative flex items-center justify-center">
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+          <div className="absolute inset-0 flex h-full w-max">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="w-screen h-full flex-shrink-0 relative">
+                <LivoLines className="w-full h-full opacity-40" />
+              </div>
+            ))}
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background/40 z-10" />
+        </div>
+        <LivoLogo />
+        <div className="relative z-10 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-white/70">Cargando tu Livo Wrapped...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error || !userData) {
+    return (
+      <div className="w-screen h-screen bg-background overflow-hidden relative flex items-center justify-center">
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+          <div className="absolute inset-0 flex h-full w-max">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="w-screen h-full flex-shrink-0 relative">
+                <LivoLines className="w-full h-full opacity-40" />
+              </div>
+            ))}
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background/40 z-10" />
+        </div>
+        <LivoLogo />
+        <div className="relative z-10 text-center max-w-md px-6">
+          <p className="text-white text-xl mb-4">Oops, algo salió mal</p>
+          <p className="text-white/70 mb-6">{error || 'No se pudieron cargar tus datos'}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            Intentar de nuevo
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-screen h-screen bg-background overflow-hidden relative">
@@ -104,7 +155,7 @@ const Index = () => {
         <SlideContent>
           <div className="flex flex-col items-center gap-6">
             <SlideCard variant="default" delay={200} hover={false}>
-              <h2 className="text-2xl font-bold text-center mb-3 gradient-text">María</h2>
+              <h2 className="text-2xl font-bold text-center mb-3 gradient-text">{userData.first_name}</h2>
               <p className="text-center text-base leading-relaxed text-card-foreground/80">
                 Este año has estado donde más se necesitaba: has cuidado, has aprendido y has dejado un gran impacto como enfermera.
               </p>
@@ -142,21 +193,21 @@ const Index = () => {
             <SlideCard delay={200}>
               <div className="flex items-center justify-between">
                 <p className="text-base text-card-foreground">Turnos completados</p>
-                <span className="number-stat gradient-text">12</span>
+                <span className="number-stat gradient-text">{userData.total_shifts}</span>
               </div>
             </SlideCard>
 
             <SlideCard delay={300}>
               <div className="flex items-center justify-between">
                 <p className="text-base text-card-foreground">Horas con Livo</p>
-                <span className="number-stat gradient-text">182h</span>
+                <span className="number-stat gradient-text">{userData.total_hours_worked}h</span>
               </div>
             </SlideCard>
 
             <SlideCard delay={400}>
               <div className="flex items-center justify-between">
                 <p className="text-base text-card-foreground">Centros visitados</p>
-                <span className="number-stat gradient-text">5</span>
+                <span className="number-stat gradient-text">{userData.different_facilities}</span>
               </div>
             </SlideCard>
 
@@ -165,7 +216,7 @@ const Index = () => {
                 <IconHeartbeat size={24} className="text-primary" />
                 <div>
                   <p className="text-sm text-card-foreground/60 font-medium">Tu especialidad</p>
-                  <p className="text-lg font-bold text-card-foreground">Hemodiálisis</p>
+                  <p className="text-lg font-bold text-card-foreground">{userData.most_common_specialization}</p>
                 </div>
               </div>
             </SlideCard>
@@ -199,7 +250,7 @@ const Index = () => {
                 Este año, solo con Livo, has cuidado a
               </p>
               <p className="text-center number-highlight my-4 opacity-0 animate-number-pop" style={{ animationDelay: '600ms' }}>
-                360
+                {userData.total_patients_impacted}
               </p>
               <p className="text-center text-xl font-semibold text-card-foreground">
                 pacientes
@@ -207,7 +258,7 @@ const Index = () => {
             </SlideCard>
 
             <p className="text-white text-base text-center opacity-0 animate-fade-up max-w-xs" style={{ animationDelay: '900ms' }}>
-              Cada uno de ellos es una persona que recibió la atención que necesitaba gracias a tu compromiso.
+              {userData.patients_impact_description}
             </p>
           </div>
         </SlideContent>
@@ -233,24 +284,24 @@ const Index = () => {
             <SlideCard delay={100}>
               <div className="flex items-center justify-between">
                 <p className="text-base text-card-foreground">Ámbitos diferentes</p>
-                <span className="text-3xl font-bold gradient-text">4</span>
+                <span className="text-3xl font-bold gradient-text">{userData.different_specializations}</span>
               </div>
             </SlideCard>
 
             <SlideCard delay={150}>
               <div className="flex items-center justify-between">
-                <p className="text-base text-card-foreground">Unidades</p>
-                <span className="text-3xl font-bold gradient-text">3</span>
+                <p className="text-base text-card-foreground">Centros</p>
+                <span className="text-3xl font-bold gradient-text">{userData.different_facilities}</span>
               </div>
             </SlideCard>
 
             <SlideCard delay={200}>
               <div className="text-center">
                 <p className="text-sm text-card-foreground/60 mb-1">Tu especialidad favorita</p>
-                <p className="text-2xl font-bold text-card-foreground">Hemodiálisis</p>
+                <p className="text-2xl font-bold text-card-foreground">{userData.most_common_specialization}</p>
                 <div className="flex items-center justify-center gap-2 mt-2 text-sm text-card-foreground/60">
                   <IconHeartbeat size={16} className="text-primary" />
-                  <span>16 turnos realizados</span>
+                  <span>{userData.total_shifts} turnos realizados</span>
                 </div>
               </div>
             </SlideCard>
@@ -283,28 +334,28 @@ const Index = () => {
             <SlideCard delay={100}>
               <div className="flex items-center justify-between">
                 <p className="text-base text-card-foreground">Turnos de noche</p>
-                <span className="text-3xl font-bold gradient-text">12</span>
+                <span className="text-3xl font-bold gradient-text">{userData.night_shifts}</span>
               </div>
             </SlideCard>
 
             <SlideCard delay={200}>
               <div className="flex items-center justify-between">
                 <p className="text-base text-card-foreground">Turnos de día</p>
-                <span className="text-3xl font-bold gradient-text">10</span>
+                <span className="text-3xl font-bold gradient-text">{userData.morning_shifts + userData.evening_shifts}</span>
               </div>
             </SlideCard>
 
             <SlideCard variant="highlight" delay={300}>
               <div className="text-center">
                 <p className="text-sm opacity-80">Tu día favorito</p>
-                <p className="text-2xl font-bold mt-1">sábado</p>
+                <p className="text-2xl font-bold mt-1">{userData.most_common_day.toLowerCase()}</p>
               </div>
             </SlideCard>
 
             <SlideCard delay={400}>
               <div>
                 <p className="text-sm text-card-foreground/60">Horario preferido</p>
-                <p className="text-base font-semibold text-card-foreground">turno de noche</p>
+                <p className="text-base font-semibold text-card-foreground">{userData.preferred_time.toLowerCase()}</p>
               </div>
             </SlideCard>
           </div>
@@ -387,7 +438,7 @@ const Index = () => {
 
                   {/* Name */}
                   <h2 className="text-base font-semibold text-[#114454] mb-0.5 tracking-wide" style={{ opacity: 1 }}>
-                    María
+                    {userData.first_name}
                   </h2>
 
                   {/* Title - color sólido para compatibilidad con html2canvas */}
@@ -395,12 +446,12 @@ const Index = () => {
                     className="text-lg font-bold mb-1.5 text-center" 
                     style={{ opacity: 1, color: '#36C3A0' }}
                   >
-                    Enfermera Noctámbula 🌙
+                    {userData.bucket}
                   </h3>
 
                   {/* Quote */}
                   <p className="text-center text-xs text-[#114454]/60 px-4 italic" style={{ opacity: 1 }}>
-                    "Cuando la ciudad duerme, tú sostienes la guardia del cuidado."
+                    {userData.bucket_description}
                   </p>
                 </div>
 
@@ -409,29 +460,29 @@ const Index = () => {
                   <div className="grid grid-cols-2 gap-2 w-full" style={{ opacity: 1 }}>
                     <StatCard
                       icon={<IconChartBar size={16} />}
-                      value="Top 4%"
-                      label="Ranking"
+                      value={`${userData.total_shifts}`}
+                      label="Turnos"
                       highlight
                       animate={false}
                       compact
                     />
                     <StatCard
                       icon={<IconFlame size={16} />}
-                      value="180"
-                      label="Turnos"
+                      value={`${userData.total_hours_worked}h`}
+                      label="Horas"
                       animate={false}
                       compact
                     />
                     <StatCard
                       icon={<IconBuilding size={16} />}
-                      value="3"
+                      value={`${userData.different_facilities}`}
                       label="Centros"
                       animate={false}
                       compact
                     />
                     <StatCard
                       icon={<IconHeart size={16} />}
-                      value="4"
+                      value={`${userData.different_specializations}`}
                       label="Especialidades"
                       animate={false}
                       compact

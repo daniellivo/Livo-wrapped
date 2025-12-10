@@ -218,7 +218,7 @@ const Index = () => {
             <SlideCard variant="default" delay={200} hover={false}>
               <h2 className="text-2xl font-bold text-center mb-3 gradient-text">{userData.first_name}</h2>
               <p className="text-center text-base leading-relaxed text-card-foreground/80">
-                Este año has estado donde más se necesitaba: has cuidado, has aprendido y has dejado un gran impacto como enfermera.
+                Este año has estado donde más se necesitaba: has cuidado, has aprendido y has dejado un gran impacto.
               </p>
               <p className="text-center text-sm leading-relaxed mt-4 text-card-foreground/50 italic">
                 Ahora toca mirar atrás y reconocer todo lo que has conseguido.
@@ -380,12 +380,6 @@ const Index = () => {
               </div>
             </SlideCard>
 
-            <SlideCard delay={500}>
-              <div>
-                <p className="text-sm text-card-foreground/60">Horario preferido</p>
-                <p className="text-base font-semibold text-card-foreground">{userData.preferred_time.toLowerCase()}</p>
-              </div>
-            </SlideCard>
           </div>
         </SlideContent>
 

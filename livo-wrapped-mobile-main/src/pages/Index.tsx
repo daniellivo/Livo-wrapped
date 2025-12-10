@@ -446,40 +446,39 @@ const Index = () => {
         {/* Slide 10 - Final Result Card (Optimized for Mobile) */}
         <div className="w-full h-full overflow-y-auto overflow-x-hidden">
           <div className="min-h-full flex flex-col items-center justify-start px-4 py-6 pb-20">
-            {/* Wrapper para posicionar el dado */}
-            <div className="relative">
-              {/* Botón cambiar enfermera - fuera de la card */}
+            {/* Card exportable - dimensiones fijas para mantener ratios */}
+            <div
+              ref={cardRef}
+              className="relative rounded-[2rem] shadow-2xl flex-shrink-0"
+              style={{
+                background: '#F6F5F4',
+                width: '320px',
+                height: 'calc(80vh)',
+                maxHeight: '640px',
+                minHeight: '500px',
+              }}
+            >
+              {/* Botón cambiar enfermera - dentro de la card pero no se exporta */}
               <button
                 onClick={handleChangeNurse}
-                className="absolute -top-2 -right-2 z-30 p-2.5 bg-white/20 hover:bg-white/30 rounded-full transition-all duration-200 border border-white/30 hover:border-white/50 shadow-lg backdrop-blur-sm"
+                data-html2canvas-ignore="true"
+                className="absolute top-4 right-4 z-30 p-2.5 bg-white/20 hover:bg-white/30 rounded-full transition-all duration-200 border border-white/30 hover:border-white/50 shadow-lg backdrop-blur-sm"
                 aria-label="Cambiar enfermera"
               >
                 <IconReplace size={20} className="text-[#36C3A0]" />
               </button>
 
-              {/* Card exportable - dimensiones fijas para mantener ratios */}
-              <div
-                ref={cardRef}
-                className="rounded-[2rem] shadow-2xl flex-shrink-0"
-                style={{
-                  background: '#F6F5F4',
-                  width: '320px',
-                  height: 'calc(80vh)',
-                  maxHeight: '640px',
-                  minHeight: '500px',
-                }}
-              >
-                <div className="relative w-full h-full p-4 flex flex-col">
-                  {/* Logo top left - más grande */}
-                  <img
-                    src={livoLogo}
-                    alt="Livo"
-                    className="absolute top-4 left-4 h-7 w-auto z-20"
-                    style={{ opacity: 1 }}
-                  />
+              <div className="relative w-full h-full p-4 flex flex-col">
+                {/* Logo top left - más grande */}
+                <img
+                  src={livoLogo}
+                  alt="Livo"
+                  className="absolute top-4 left-4 h-7 w-auto z-20"
+                  style={{ opacity: 1 }}
+                />
 
-                  {/* Inner content for sharing */}
-                  <div className="flex flex-col items-center h-full pt-10">
+                {/* Inner content for sharing */}
+                <div className="flex flex-col items-center h-full pt-10">
                     {/* Top section: Character illustration - GRANDE */}
                     <div className="flex-1 flex items-center justify-center w-full">
                       <img
@@ -545,7 +544,6 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-              </div>
             </div>
 
             {/* Indicador de scroll */}

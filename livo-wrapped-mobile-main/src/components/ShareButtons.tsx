@@ -3,7 +3,7 @@ import html2canvas from 'html2canvas';
 import { toast } from 'sonner';
 import { useState } from 'react';
 
-const SHARE_WEBHOOK_URL = 'https://livomarketing.app.n8n.cloud/webhook/e1c955cd-b1a5-4d0c-a023-a876f9a648c3';
+const SHARE_WEBHOOK_URL = 'https://livomarketing.app.n8n.cloud/webhook/70680ec2-1201-4cbb-a998-746206ba7634';
 
 interface ShareButtonsProps {
   cardRef: React.RefObject<HTMLDivElement>;

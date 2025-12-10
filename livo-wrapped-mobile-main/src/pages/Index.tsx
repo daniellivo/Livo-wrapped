@@ -458,27 +458,28 @@ const Index = () => {
               }}
             >
               <div className="relative w-full h-full p-4 flex flex-col">
-                {/* Logo top left */}
+                {/* Logo top left - más grande */}
                 <img
                   src={livoLogo}
                   alt="Livo"
-                  className="absolute top-4 left-4 h-5 w-auto z-20"
+                  className="absolute top-4 left-4 h-7 w-auto z-20"
                   style={{ opacity: 1 }}
                 />
 
                 {/* Inner content for sharing */}
-                <div className="flex flex-col items-center h-full justify-between pt-8">
-                  {/* Middle section: Character + Title */}
-                  <div className="flex flex-col items-center flex-1 justify-center">
-                    {/* Character illustration - tamaño responsive */}
-                    <div className="relative mb-2" style={{ opacity: 1 }}>
-                      <img
-                        src={getNurseImageUrl(userData.bucket_image_url, nurseVariant)}
-                        alt={userData.bucket}
-                        className="w-[30vw] h-[30vw] max-w-[140px] max-h-[140px] min-w-[100px] min-h-[100px] object-contain relative z-10"
-                      />
-                    </div>
+                <div className="flex flex-col items-center h-full pt-10">
+                  {/* Top section: Character illustration - GRANDE */}
+                  <div className="flex-1 flex items-center justify-center w-full">
+                    <img
+                      src={getNurseImageUrl(userData.bucket_image_url, nurseVariant)}
+                      alt={userData.bucket}
+                      className="w-[55vw] h-[55vw] max-w-[220px] max-h-[220px] object-contain"
+                      style={{ opacity: 1 }}
+                    />
+                  </div>
 
+                  {/* Bottom section: Text + Stats */}
+                  <div className="w-full flex flex-col items-center">
                     {/* Name */}
                     <h2 className="text-base font-semibold text-[#114454] mb-0.5 tracking-wide" style={{ opacity: 1 }}>
                       {userData.first_name}
@@ -493,13 +494,11 @@ const Index = () => {
                     </h3>
 
                     {/* Quote */}
-                    <p className="text-center text-xs text-[#114454]/60 px-3 italic leading-relaxed" style={{ opacity: 1 }}>
+                    <p className="text-center text-xs text-[#114454]/60 px-3 italic leading-relaxed mb-3" style={{ opacity: 1 }}>
                       {userData.bucket_description}
                     </p>
-                  </div>
 
-                  {/* Bottom section: Stats grid */}
-                  <div className="w-full mt-auto pt-3">
+                    {/* Stats grid */}
                     <div className="grid grid-cols-2 gap-2 w-full" style={{ opacity: 1 }}>
                       <StatCard
                         icon={<IconChartBar size={14} />}

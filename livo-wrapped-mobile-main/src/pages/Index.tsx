@@ -17,7 +17,7 @@ const WEBHOOK_URL = 'https://livomarketing.app.n8n.cloud/webhook/e1c955cd-b1a5-4
 const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const cardRef = useRef<HTMLDivElement>(null);
-  const totalSlides = 10;
+  const totalSlides = 9;
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   
@@ -83,9 +83,12 @@ const Index = () => {
     return originalUrl;
   };
 
-  // Función para cambiar la variante de enfermera (cicla 1 -> 2 -> 3 -> 4 -> 1)
+  // Función para cambiar la variante de enfermera (cicla 1 -> 4 -> 2 -> 3 -> 1)
   const handleChangeNurse = () => {
-    setNurseVariant((prev) => (prev % 4) + 1);
+    const order = [1, 4, 2, 3];
+    const currentIndex = order.indexOf(nurseVariant);
+    const nextIndex = (currentIndex + 1) % order.length;
+    setNurseVariant(order[nextIndex]);
   };
 
   // Loading state
@@ -203,10 +206,10 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background/40 z-10" />
       </div>
 
-      <div className={`transition-opacity duration-500 ${currentSlide === 9 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+      <div className={`transition-opacity duration-500 ${currentSlide === 8 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         <LivoLogo />
       </div>
-      {currentSlide !== 9 && <ProgressDots total={totalSlides} current={currentSlide} />}
+      {currentSlide !== 8 && <ProgressDots total={totalSlides} current={currentSlide} />}
 
       <Slider onSlideChange={setCurrentSlide}>
         {/* Slide 1 - Welcome */}
@@ -245,7 +248,7 @@ const Index = () => {
             <SlideCard delay={100}>
               <div className="flex items-center justify-between">
                 <p className="text-base text-card-foreground">Te uniste a Livo en</p>
-                <span className="text-xl font-bold gradient-text">Diciembre</span>
+                <span className="text-xl font-bold gradient-text">{userData.joined}</span>
               </div>
             </SlideCard>
 
@@ -332,41 +335,7 @@ const Index = () => {
           </div>
         </SlideContent>
 
-        {/* Slide 6 - Specialization */}
-        <SlideContent>
-          <div className="space-y-3 w-full">
-            <p className="text-center text-white/50 text-sm mb-4 opacity-0 animate-fade-in font-medium tracking-wide uppercase">Tu impacto profesional</p>
-
-            <SlideCard delay={100}>
-              <div className="flex items-center justify-between">
-                <p className="text-base text-card-foreground">Ámbitos diferentes</p>
-                <span className="text-3xl font-bold gradient-text">{userData.different_specializations}</span>
-              </div>
-            </SlideCard>
-
-            <SlideCard delay={150}>
-              <div className="flex items-center justify-between">
-                <p className="text-base text-card-foreground">Centros</p>
-                <span className="text-3xl font-bold gradient-text">{userData.different_facilities}</span>
-              </div>
-            </SlideCard>
-
-            <SlideCard delay={200}>
-              <div className="flex items-center justify-between">
-                <p className="text-base text-card-foreground">Tu especialidad favorita</p>
-                <span className="text-xl font-bold gradient-text">{userData.most_common_specialization}</span>
-              </div>
-            </SlideCard>
-
-            <SlideCard delay={300}>
-              <p className="text-center text-sm text-card-foreground/80">
-                Tu forma de adaptarte hace que cualquier equipo funcione mejor cuando tú estás.
-              </p>
-            </SlideCard>
-          </div>
-        </SlideContent>
-
-        {/* Slide 7 - Expert Mode Quote */}
+        {/* Slide 6 - Expert Mode Quote */}
         <SlideContent>
           <div className="flex flex-col items-center gap-8">
             <p className="text-center text-2xl font-light leading-relaxed text-white opacity-0 animate-fade-up" style={{ animationDelay: '200ms' }}>
@@ -378,7 +347,7 @@ const Index = () => {
           </div>
         </SlideContent>
 
-        {/* Slide 8 - Shift Stats */}
+        {/* Slide 7 - Shift Stats */}
         <SlideContent>
           <div className="space-y-3 w-full">
             <p className="text-center text-white/50 text-sm mb-4 opacity-0 animate-fade-in font-medium tracking-wide uppercase">Tus turnos</p>
@@ -420,7 +389,7 @@ const Index = () => {
           </div>
         </SlideContent>
 
-        {/* Slide 9 - Build Up */}
+        {/* Slide 8 - Build Up */}
         <SlideContent>
           <div className="flex flex-col items-center gap-10">
             <div className="flex gap-3 opacity-0 animate-fade-in">
@@ -443,7 +412,7 @@ const Index = () => {
           </div>
         </SlideContent>
 
-        {/* Slide 10 - Final Result Card (Optimized for Mobile) */}
+        {/* Slide 9 - Final Result Card (Optimized for Mobile) */}
         <div className="w-full h-full overflow-y-auto overflow-x-hidden">
           <div className="min-h-full flex flex-col items-center justify-start px-4 py-6 pb-20">
             {/* Card exportable - dimensiones fijas para mantener ratios */}
@@ -521,12 +490,12 @@ const Index = () => {
                         className="text-lg font-bold mb-1 text-center px-2" 
                         style={{ opacity: 1, color: '#36C3A0' }}
                       >
-                        {userData.bucket}
+                        {nurseVariant === 3 || nurseVariant === 4 ? userData.bucket_male : userData.bucket}
                       </h3>
 
                       {/* Quote */}
                       <p className="text-center text-xs text-[#114454]/60 px-3 italic leading-relaxed mb-3" style={{ opacity: 1 }}>
-                        {userData.bucket_description}
+                        {nurseVariant === 3 || nurseVariant === 4 ? userData.bucket_description_male : userData.bucket_description}
                       </p>
 
                       {/* Stats grid - dimensiones fijas */}

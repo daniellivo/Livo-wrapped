@@ -13,6 +13,8 @@ export interface UserData {
   most_common_specialization: string;
   bucket: string;
   bucket_description: string;
+  bucket_male: string;
+  bucket_description_male: string;
   total_patients_impacted: number;
   patients_impact_description: string;
   morning_shifts: number;
@@ -20,5 +22,6 @@ export interface UserData {
   preferred_time: string;
   bucket_image_url: string;
   referral_code: string;
+  joined: string;
 }
 

@@ -466,31 +466,42 @@ const Index = () => {
                 <IconReplace size={20} className="text-[#36C3A0]" />
               </button>
 
-              <div className="relative w-full h-full flex flex-col" style={{ padding: '20px' }}>
-                {/* Logo top left - con margen suficiente */}
-                <img
-                  src={livoLogo}
-                  alt="Livo"
-                  style={{ 
-                    position: 'absolute',
-                    top: '20px',
-                    left: '20px',
-                    height: '28px',
-                    width: 'auto',
-                    opacity: 1,
-                    zIndex: 20,
-                  }}
-                />
+              <div style={{ 
+                position: 'relative',
+                width: '100%', 
+                height: '100%', 
+                display: 'flex',
+                flexDirection: 'column',
+                padding: '24px',
+                boxSizing: 'border-box',
+              }}>
+                {/* Logo top left */}
+                <div style={{ marginBottom: '16px' }}>
+                  <img
+                    src={livoLogo}
+                    alt="Livo"
+                    style={{ 
+                      height: '32px',
+                      width: 'auto',
+                      display: 'block',
+                    }}
+                  />
+                </div>
 
                 {/* Inner content for sharing */}
-                <div className="flex flex-col items-center h-full" style={{ paddingTop: '40px' }}>
-                    {/* Top section: Character illustration - ratio 514x750 */}
+                <div style={{ 
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  flex: 1,
+                }}>
+                    {/* Top section: Character illustration - ratio 1000x1339 */}
                     <div className="flex-1 flex items-center justify-center w-full">
                       <img
                         src={getNurseImageUrl(userData.bucket_image_url, nurseVariant)}
                         alt={userData.bucket}
                         style={{
-                          width: '137px',  // Mantiene ratio 514:750
+                          width: '149px',  // Mantiene ratio 1000:1339
                           height: '200px',
                           objectFit: 'contain',
                           opacity: 1,
@@ -567,7 +578,7 @@ const Index = () => {
             </div>
 
             {/* Share buttons (not included in screenshot) */}
-            <ShareButtons cardRef={cardRef} />
+            <ShareButtons cardRef={cardRef} referralCode={userData.referral_code} />
             
             {/* Spacer para el progress bar */}
             <div className="h-4" />

@@ -1,13 +1,14 @@
-import { IconDownload, IconLoader2 } from '@tabler/icons-react';
+import { IconShare, IconLoader2 } from '@tabler/icons-react';
 import html2canvas from 'html2canvas';
 import { toast } from 'sonner';
 import { useState } from 'react';
 
 interface ShareButtonsProps {
   cardRef: React.RefObject<HTMLDivElement>;
+  referralCode: string;
 }
 
-const ShareButtons = ({ cardRef }: ShareButtonsProps) => {
+const ShareButtons = ({ cardRef, referralCode }: ShareButtonsProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const generateImage = async (): Promise<Blob | null> => {
@@ -54,7 +55,7 @@ const ShareButtons = ({ cardRef }: ShareButtonsProps) => {
       const link = document.createElement('a');
       link.download = 'livo-wrapped.png';
       link.href = URL.createObjectURL(blob);
-      document.body.appendChild(link); // Append to body to ensure click works in some browsers
+      document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(link.href);
@@ -63,6 +64,14 @@ const ShareButtons = ({ cardRef }: ShareButtonsProps) => {
       console.error('Direct download failed:', e);
       toast.error('No se pudo guardar la imagen');
     }
+  };
+
+  const getShareText = () => {
+    return `Este es mi Livo Wrapped ✨
+
+Un año lleno de turnos, aprendizaje y personas que lo hacen todo posible.
+
+Si tú también quieres elegir dónde y cuándo trabajar 👉 https://campaigns.getlivo.com/mgm/${referralCode}?campaign_id=MGM_2025`;
   };
 
   const shareImage = async (blob: Blob) => {
@@ -74,8 +83,8 @@ const ShareButtons = ({ cardRef }: ShareButtonsProps) => {
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
           files: [file],
-          title: 'Comparte o guarda la imagen',
-          text: 'Guardar en tu galería',
+          title: 'Mi Livo Wrapped',
+          text: getShareText(),
         });
         toast.success('¡Imagen compartida!');
       } else {
@@ -115,14 +124,14 @@ const ShareButtons = ({ cardRef }: ShareButtonsProps) => {
       <button
         onClick={handleShareImage}
         disabled={isLoading}
-        className="flex flex-col items-center gap-2 px-6 py-3 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex flex-row items-center gap-3 px-5 py-2 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isLoading ? (
-          <IconLoader2 size={24} className="text-white animate-spin" />
+          <IconLoader2 size={20} className="text-white animate-spin" />
         ) : (
-          <IconDownload size={24} className="text-white" />
+          <IconShare size={20} className="text-white" />
         )}
-        <span className="text-sm text-white font-medium">Guardar en galería</span>
+        <span className="text-sm text-white font-medium">Comparte tu Wrapped</span>
       </button>
     </div>
   );

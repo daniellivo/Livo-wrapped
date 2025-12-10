@@ -536,7 +536,7 @@ const Index = () => {
             </div>
 
             {/* Share buttons (not included in screenshot) */}
-            <ShareButtons cardRef={cardRef} referralCode={userData.referral_code} />
+            <ShareButtons cardRef={cardRef} referralCode={userData.referral_code} encodedUserId={searchParams.get('encodedId') || ''} />
             
             {/* Spacer para el progress bar */}
             <div className="h-4" />

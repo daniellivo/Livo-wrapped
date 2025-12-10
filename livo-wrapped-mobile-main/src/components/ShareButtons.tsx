@@ -3,13 +3,33 @@ import html2canvas from 'html2canvas';
 import { toast } from 'sonner';
 import { useState } from 'react';
 
+const SHARE_WEBHOOK_URL = 'https://livomarketing.app.n8n.cloud/webhook/e1c955cd-b1a5-4d0c-a023-a876f9a648c3';
+
 interface ShareButtonsProps {
   cardRef: React.RefObject<HTMLDivElement>;
   referralCode: string;
+  encodedUserId: string;
 }
 
-const ShareButtons = ({ cardRef, referralCode }: ShareButtonsProps) => {
+const ShareButtons = ({ cardRef, referralCode, encodedUserId }: ShareButtonsProps) => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const trackShare = async () => {
+    try {
+      await fetch(SHARE_WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          encoded_user_id: encodedUserId,
+        }),
+      });
+    } catch (error) {
+      // Silent fail - we don't want to interrupt the share flow
+      console.error('Error tracking share:', error);
+    }
+  };
 
   const generateImage = async (): Promise<Blob | null> => {
     if (!cardRef.current) {
@@ -103,6 +123,9 @@ Si tú también quieres elegir dónde y cuándo trabajar 👉 https://campaigns.
   const handleShareImage = async () => {
     if (isLoading) return;
     setIsLoading(true);
+
+    // Track share event (fire and forget)
+    trackShare();
 
     try {
       const blob = await generateImage();

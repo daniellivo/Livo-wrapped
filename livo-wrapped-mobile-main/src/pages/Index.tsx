@@ -466,28 +466,32 @@ const Index = () => {
                 <IconReplace size={20} className="text-[#36C3A0]" />
               </button>
 
-              <div className="relative w-full h-full p-6 flex flex-col">
-                {/* Logo top left - más grande */}
+              <div className="relative w-full h-full flex flex-col" style={{ padding: '20px' }}>
+                {/* Logo top left - con margen suficiente */}
                 <img
                   src={livoLogo}
                   alt="Livo"
-                  className="absolute top-6 left-6 h-7 w-auto z-20"
                   style={{ 
+                    position: 'absolute',
+                    top: '20px',
+                    left: '20px',
+                    height: '28px',
+                    width: 'auto',
                     opacity: 1,
-                    maxWidth: '120px', // Prevenir desbordamiento
+                    zIndex: 20,
                   }}
                 />
 
                 {/* Inner content for sharing */}
-                <div className="flex flex-col items-center h-full pt-8">
-                    {/* Top section: Character illustration - GRANDE */}
+                <div className="flex flex-col items-center h-full" style={{ paddingTop: '40px' }}>
+                    {/* Top section: Character illustration - ratio 514x750 */}
                     <div className="flex-1 flex items-center justify-center w-full">
                       <img
                         src={getNurseImageUrl(userData.bucket_image_url, nurseVariant)}
                         alt={userData.bucket}
                         style={{
-                          width: '180px',
-                          height: '180px',
+                          width: '137px',  // Mantiene ratio 514:750
+                          height: '200px',
                           objectFit: 'contain',
                           opacity: 1,
                         }}
@@ -514,10 +518,16 @@ const Index = () => {
                         {userData.bucket_description}
                       </p>
 
-                      {/* Stats grid */}
-                      <div className="grid grid-cols-2 gap-2 w-full" style={{ opacity: 1 }}>
+                      {/* Stats grid - dimensiones fijas */}
+                      <div style={{ 
+                        display: 'grid', 
+                        gridTemplateColumns: '1fr 1fr', 
+                        gap: '8px', 
+                        width: '100%',
+                        opacity: 1,
+                      }}>
                         <StatCard
-                          icon={<IconChartBar size={14} />}
+                          icon={<IconChartBar size={16} />}
                           value={`${userData.total_shifts}`}
                           label="Turnos"
                           highlight
@@ -525,21 +535,21 @@ const Index = () => {
                           compact
                         />
                         <StatCard
-                          icon={<IconFlame size={14} />}
+                          icon={<IconFlame size={16} />}
                           value={`${userData.total_hours_worked}h`}
                           label="Horas"
                           animate={false}
                           compact
                         />
                         <StatCard
-                          icon={<IconBuilding size={14} />}
+                          icon={<IconBuilding size={16} />}
                           value={`${userData.different_facilities}`}
                           label="Centros"
                           animate={false}
                           compact
                         />
                         <StatCard
-                          icon={<IconHeart size={14} />}
+                          icon={<IconHeart size={16} />}
                           value={`${userData.different_specializations}`}
                           label="Especialidades"
                           animate={false}

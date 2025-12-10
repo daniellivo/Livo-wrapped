@@ -468,24 +468,31 @@ const Index = () => {
                 <IconReplace size={20} className="text-[#36C3A0]" />
               </button>
 
-              <div className="relative w-full h-full p-4 flex flex-col">
+              <div className="relative w-full h-full p-6 flex flex-col">
                 {/* Logo top left - más grande */}
                 <img
                   src={livoLogo}
                   alt="Livo"
-                  className="absolute top-4 left-4 h-7 w-auto z-20"
-                  style={{ opacity: 1 }}
+                  className="absolute top-6 left-6 h-7 w-auto z-20"
+                  style={{ 
+                    opacity: 1,
+                    maxWidth: '120px', // Prevenir desbordamiento
+                  }}
                 />
 
                 {/* Inner content for sharing */}
-                <div className="flex flex-col items-center h-full pt-10">
+                <div className="flex flex-col items-center h-full pt-8">
                     {/* Top section: Character illustration - GRANDE */}
                     <div className="flex-1 flex items-center justify-center w-full">
                       <img
                         src={getNurseImageUrl(userData.bucket_image_url, nurseVariant)}
                         alt={userData.bucket}
-                        className="w-48 h-48 max-w-[200px] max-h-[200px] object-contain"
-                        style={{ opacity: 1 }}
+                        style={{
+                          width: '180px',
+                          height: '180px',
+                          objectFit: 'contain',
+                          opacity: 1,
+                        }}
                       />
                     </div>
 

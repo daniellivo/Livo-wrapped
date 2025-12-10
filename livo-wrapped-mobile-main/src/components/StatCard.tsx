@@ -35,17 +35,23 @@ const StatCard = ({
       >
         <div className="flex items-center gap-2">
           <div 
-            className="p-1 rounded-lg"
+            className="flex items-center justify-center"
             style={{
+              width: '24px',
+              height: '24px',
               backgroundColor: highlight ? 'rgba(54, 195, 160, 0.2)' : 'rgba(17, 68, 84, 0.1)',
-              color: '#36C3A0',
+              borderRadius: '8px',
+              padding: '4px',
             }}
           >
             {icon}
           </div>
           <span 
             className="text-lg font-bold"
-            style={{ color: highlight ? '#36C3A0' : '#114454' }}
+            style={{ 
+              color: highlight ? '#36C3A0' : '#114454',
+              lineHeight: '1.2', // Asegurar altura de linea consistente
+            }}
           >
             {value}
           </span>

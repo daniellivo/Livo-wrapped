@@ -8,7 +8,7 @@ import LivoLines from '@/components/LivoLines';
 import ProgressDots from '@/components/ProgressDots';
 import StatCard from '@/components/StatCard';
 import ShareButtons from '@/components/ShareButtons';
-import { IconChartBar, IconFlame, IconBuilding, IconHeart } from '@tabler/icons-react';
+import { IconChartBar, IconFlame, IconBuilding, IconHeart, IconDice6 } from '@tabler/icons-react';
 import livoLogo from '@/assets/livo-logo.svg';
 import { UserData } from '@/types/user';
 
@@ -446,89 +446,102 @@ const Index = () => {
         {/* Slide 10 - Final Result Card (Optimized for Mobile) */}
         <div className="w-full h-full overflow-y-auto overflow-x-hidden">
           <div className="min-h-full flex flex-col items-center justify-start px-4 py-6 pb-20">
-            {/* Card exportable - 80% del alto de pantalla */}
-            <div
-              ref={cardRef}
-              className="w-[85vw] max-w-[360px] rounded-[2rem] shadow-2xl flex-shrink-0"
-              style={{
-                background: '#F6F5F4',
-                height: '80vh',
-                maxHeight: '720px',
-                minHeight: '500px',
-              }}
-            >
-              <div className="relative w-full h-full p-4 flex flex-col">
-                {/* Logo top left - más grande */}
-                <img
-                  src={livoLogo}
-                  alt="Livo"
-                  className="absolute top-4 left-4 h-7 w-auto z-20"
-                  style={{ opacity: 1 }}
-                />
+            {/* Wrapper para posicionar el dado */}
+            <div className="relative">
+              {/* Botón dado - fuera de la card */}
+              <button
+                onClick={handleChangeNurse}
+                className="absolute -top-2 -right-2 z-30 p-2.5 bg-white/20 hover:bg-white/30 text-white rounded-full transition-all duration-200 border border-white/30 hover:border-white/50 shadow-lg backdrop-blur-sm"
+                aria-label="Cambiar enfermera"
+              >
+                <IconDice6 size={20} className="text-white" />
+              </button>
 
-                {/* Inner content for sharing */}
-                <div className="flex flex-col items-center h-full pt-10">
-                  {/* Top section: Character illustration - GRANDE */}
-                  <div className="flex-1 flex items-center justify-center w-full">
-                    <img
-                      src={getNurseImageUrl(userData.bucket_image_url, nurseVariant)}
-                      alt={userData.bucket}
-                      className="w-[55vw] h-[55vw] max-w-[220px] max-h-[220px] object-contain"
-                      style={{ opacity: 1 }}
-                    />
-                  </div>
+              {/* Card exportable - dimensiones fijas para mantener ratios */}
+              <div
+                ref={cardRef}
+                className="rounded-[2rem] shadow-2xl flex-shrink-0"
+                style={{
+                  background: '#F6F5F4',
+                  width: '320px',
+                  height: 'calc(80vh)',
+                  maxHeight: '640px',
+                  minHeight: '500px',
+                }}
+              >
+                <div className="relative w-full h-full p-4 flex flex-col">
+                  {/* Logo top left - más grande */}
+                  <img
+                    src={livoLogo}
+                    alt="Livo"
+                    className="absolute top-4 left-4 h-7 w-auto z-20"
+                    style={{ opacity: 1 }}
+                  />
 
-                  {/* Bottom section: Text + Stats */}
-                  <div className="w-full flex flex-col items-center">
-                    {/* Name */}
-                    <h2 className="text-base font-semibold text-[#114454] mb-0.5 tracking-wide" style={{ opacity: 1 }}>
-                      {userData.first_name}
-                    </h2>
-
-                    {/* Title - color sólido para compatibilidad con html2canvas */}
-                    <h3 
-                      className="text-lg font-bold mb-1 text-center px-2" 
-                      style={{ opacity: 1, color: '#36C3A0' }}
-                    >
-                      {userData.bucket}
-                    </h3>
-
-                    {/* Quote */}
-                    <p className="text-center text-xs text-[#114454]/60 px-3 italic leading-relaxed mb-3" style={{ opacity: 1 }}>
-                      {userData.bucket_description}
-                    </p>
-
-                    {/* Stats grid */}
-                    <div className="grid grid-cols-2 gap-2 w-full" style={{ opacity: 1 }}>
-                      <StatCard
-                        icon={<IconChartBar size={14} />}
-                        value={`${userData.total_shifts}`}
-                        label="Turnos"
-                        highlight
-                        animate={false}
-                        compact
+                  {/* Inner content for sharing */}
+                  <div className="flex flex-col items-center h-full pt-10">
+                    {/* Top section: Character illustration - GRANDE */}
+                    <div className="flex-1 flex items-center justify-center w-full">
+                      <img
+                        src={getNurseImageUrl(userData.bucket_image_url, nurseVariant)}
+                        alt={userData.bucket}
+                        className="w-48 h-48 max-w-[200px] max-h-[200px] object-contain"
+                        style={{ opacity: 1 }}
                       />
-                      <StatCard
-                        icon={<IconFlame size={14} />}
-                        value={`${userData.total_hours_worked}h`}
-                        label="Horas"
-                        animate={false}
-                        compact
-                      />
-                      <StatCard
-                        icon={<IconBuilding size={14} />}
-                        value={`${userData.different_facilities}`}
-                        label="Centros"
-                        animate={false}
-                        compact
-                      />
-                      <StatCard
-                        icon={<IconHeart size={14} />}
-                        value={`${userData.different_specializations}`}
-                        label="Especialidades"
-                        animate={false}
-                        compact
-                      />
+                    </div>
+
+                    {/* Bottom section: Text + Stats */}
+                    <div className="w-full flex flex-col items-center">
+                      {/* Name */}
+                      <h2 className="text-base font-semibold text-[#114454] mb-0.5 tracking-wide" style={{ opacity: 1 }}>
+                        {userData.first_name}
+                      </h2>
+
+                      {/* Title - color sólido para compatibilidad con html2canvas */}
+                      <h3 
+                        className="text-lg font-bold mb-1 text-center px-2" 
+                        style={{ opacity: 1, color: '#36C3A0' }}
+                      >
+                        {userData.bucket}
+                      </h3>
+
+                      {/* Quote */}
+                      <p className="text-center text-xs text-[#114454]/60 px-3 italic leading-relaxed mb-3" style={{ opacity: 1 }}>
+                        {userData.bucket_description}
+                      </p>
+
+                      {/* Stats grid */}
+                      <div className="grid grid-cols-2 gap-2 w-full" style={{ opacity: 1 }}>
+                        <StatCard
+                          icon={<IconChartBar size={14} />}
+                          value={`${userData.total_shifts}`}
+                          label="Turnos"
+                          highlight
+                          animate={false}
+                          compact
+                        />
+                        <StatCard
+                          icon={<IconFlame size={14} />}
+                          value={`${userData.total_hours_worked}h`}
+                          label="Horas"
+                          animate={false}
+                          compact
+                        />
+                        <StatCard
+                          icon={<IconBuilding size={14} />}
+                          value={`${userData.different_facilities}`}
+                          label="Centros"
+                          animate={false}
+                          compact
+                        />
+                        <StatCard
+                          icon={<IconHeart size={14} />}
+                          value={`${userData.different_specializations}`}
+                          label="Especialidades"
+                          animate={false}
+                          compact
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -539,14 +552,6 @@ const Index = () => {
             <div className="flex flex-col items-center mt-4 text-white/50 text-xs animate-bounce">
               <span>↓ Desliza para compartir</span>
             </div>
-
-            {/* Botón para cambiar variante de enfermera */}
-            <button
-              onClick={handleChangeNurse}
-              className="mt-4 mb-3 px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white rounded-full text-sm font-medium transition-all duration-200 border border-white/20 hover:border-white/40"
-            >
-              ✨ Cambiar enfermera
-            </button>
 
             {/* Share buttons (not included in screenshot) */}
             <ShareButtons cardRef={cardRef} />

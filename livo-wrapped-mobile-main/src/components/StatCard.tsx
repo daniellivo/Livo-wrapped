@@ -68,10 +68,10 @@ const StatCard = ({
               fontSize: '20px',
               fontWeight: 700,
               color: highlight ? '#36C3A0' : '#114454',
-              lineHeight: '32px',
+              lineHeight: '20px',
               height: '32px',
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-start',
             }}
           >
             {value}

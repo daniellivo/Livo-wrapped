@@ -541,11 +541,6 @@ const Index = () => {
                 </div>
             </div>
 
-            {/* Indicador de scroll */}
-            <div className="flex flex-col items-center mt-4 text-white/50 text-xs animate-bounce">
-              <span>↓ Desliza para compartir</span>
-            </div>
-
             {/* Share buttons (not included in screenshot) */}
             <ShareButtons cardRef={cardRef} referralCode={userData.referral_code} />
             

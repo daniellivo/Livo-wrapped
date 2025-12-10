@@ -1,49 +1,82 @@
+import { useMemo } from 'react';
+
 interface LivoLinesProps {
   className?: string;
-  preserveAspectRatio?: string;
+  variant?: 1 | 2 | 3 | 'random';
 }
 
-const LivoLines = ({ className = '', preserveAspectRatio = "xMidYMid slice" }: LivoLinesProps) => {
+// Línea 1 - Curva en S grande
+const Line1 = () => (
+  <svg
+    viewBox="0 0 1464 1678"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-full h-full"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <path
+      opacity="0.5"
+      d="M28.0039 1622.55C949.854 1814.8 977.954 904.853 782.904 1001.63C587.851 1098.4 762.468 1506.91 1056.3 1489.07C1278.79 1475.56 1416.2 1238.67 1432.04 1083.27C1465.99 750.196 1205.56 595.409 1033.56 646.743C828.564 707.925 1086.13 895.243 1248.06 700.743C1409.99 506.243 1417.52 168.016 1270.07 28"
+      stroke="#51D0AC"
+      strokeWidth="56"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+// Línea 2 - Forma ovalada
+const Line2 = () => (
+  <svg
+    viewBox="0 0 623 659"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-full h-full"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <path
+      opacity="0.5"
+      d="M552.982 422.547C476.448 580.991 299.982 672.046 143.013 612.055C-13.9563 552.064 8.98174 340.047 97.4817 216.548C185.982 93.0475 355.542 5.66349 477.482 33.0465C599.421 60.4305 629.516 264.103 552.982 422.547Z"
+      stroke="#51D0AC"
+      strokeWidth="56"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+// Línea 3 - Curva compleja
+const Line3 = () => (
+  <svg
+    viewBox="0 0 879 1402"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-full h-full"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <path
+      opacity="0.5"
+      d="M347.978 28.0039C-110.612 276.802 -25.1319 766.479 361.208 752.149C510.898 746.599 575.898 597.188 452.638 515.93C256.338 386.533 -180.482 839.729 144.808 1099.54C470.088 1359.34 715.518 1014.15 547.988 979.999C380.458 945.849 381.978 1489.24 850.088 1350.46"
+      stroke="#51D0AC"
+      strokeWidth="56"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const LivoLines = ({ className = '', variant = 'random' }: LivoLinesProps) => {
+  // Selecciona una variante aleatoria al montar el componente
+  const selectedVariant = useMemo(() => {
+    if (variant === 'random') {
+      return (Math.floor(Math.random() * 3) + 1) as 1 | 2 | 3;
+    }
+    return variant;
+  }, [variant]);
+
   return (
-    <svg
-      className={className}
-      viewBox="0 0 2628 1893"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio={preserveAspectRatio}
-    >
-      <defs>
-        <linearGradient id="lineGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#36C3A0" stopOpacity="0.7" />
-          <stop offset="50%" stopColor="#5DD9BC" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#36C3A0" stopOpacity="0.3" />
-        </linearGradient>
-        <linearGradient id="lineGradient2" x1="100%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#36C3A0" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#36C3A0" stopOpacity="0.2" />
-        </linearGradient>
-      </defs>
-      <g>
-        <path
-          d="M162.44 1622.55C1084.29 1814.8 1112.39 904.853 917.34 1001.63C722.287 1098.4 896.904 1506.91 1190.74 1489.07C1413.23 1475.56 1550.64 1238.67 1566.48 1083.27C1600.43 750.196 1340 595.409 1168 646.743C963 707.925 1220.57 895.243 1382.5 700.743C1544.43 506.243 1551.96 168.016 1404.51 28.0001"
-          stroke="url(#lineGradient1)"
-          strokeWidth="48"
-          strokeLinecap="round"
-        />
-        <path
-          d="M874.965 696.196C798.431 854.64 621.965 945.695 464.996 885.704C308.027 825.713 330.965 613.695 419.465 490.196C507.965 366.696 677.525 279.312 799.465 306.695C921.404 334.079 951.499 537.752 874.965 696.196Z"
-          stroke="url(#lineGradient2)"
-          strokeWidth="48"
-          strokeLinecap="round"
-        />
-        <path
-          d="M2097.78 381.185C1639.19 629.983 1724.67 1119.66 2111.01 1105.33C2260.7 1099.78 2325.7 950.369 2202.44 869.111C2006.14 739.714 1569.32 1192.91 1894.61 1452.72C2219.89 1712.52 2465.32 1367.33 2297.79 1333.18C2130.26 1299.03 2131.78 1842.42 2599.89 1703.64"
-          stroke="url(#lineGradient1)"
-          strokeWidth="48"
-          strokeLinecap="round"
-        />
-      </g>
-    </svg>
+    <div className={className}>
+      {selectedVariant === 1 && <Line1 />}
+      {selectedVariant === 2 && <Line2 />}
+      {selectedVariant === 3 && <Line3 />}
+    </div>
   );
 };
 

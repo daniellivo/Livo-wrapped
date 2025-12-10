@@ -93,12 +93,13 @@ const Index = () => {
     return (
       <div className="w-screen h-screen bg-background overflow-hidden relative flex items-center justify-center">
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-          <div className="absolute inset-0 flex h-full w-max">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="w-screen h-full flex-shrink-0 relative">
-                <LivoLines className="w-full h-full opacity-40" />
-              </div>
-            ))}
+          {/* Línea superior derecha */}
+          <div className="absolute -top-20 -right-20 w-80 h-96 opacity-50">
+            <LivoLines variant={1} className="w-full h-full" />
+          </div>
+          {/* Línea inferior izquierda */}
+          <div className="absolute bottom-20 -left-16 w-56 h-56 opacity-40">
+            <LivoLines variant={2} className="w-full h-full" />
           </div>
           <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background/40 z-10" />
         </div>
@@ -116,12 +117,13 @@ const Index = () => {
     return (
       <div className="w-screen h-screen bg-background overflow-hidden relative flex items-center justify-center">
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-          <div className="absolute inset-0 flex h-full w-max">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="w-screen h-full flex-shrink-0 relative">
-                <LivoLines className="w-full h-full opacity-40" />
-              </div>
-            ))}
+          {/* Línea superior derecha */}
+          <div className="absolute -top-20 -right-20 w-80 h-96 opacity-50">
+            <LivoLines variant={1} className="w-full h-full" />
+          </div>
+          {/* Línea inferior izquierda */}
+          <div className="absolute bottom-20 -left-16 w-56 h-56 opacity-40">
+            <LivoLines variant={2} className="w-full h-full" />
           </div>
           <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background/40 z-10" />
         </div>
@@ -147,21 +149,54 @@ const Index = () => {
 
   return (
     <div className="w-screen h-screen bg-background overflow-hidden relative">
-      {/* Fixed background with LivoLines - continuous across all slides */}
-      {/* Fixed background with LivoLines - continuous moving background */}
+      {/* Fixed background with LivoLines - optimizado para móvil */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        {/* Línea 1 - Superior derecha, se mueve hacia arriba */}
         <div
-          className="absolute inset-0 flex h-full w-max transition-transform duration-700 ease-out will-change-transform"
+          className="absolute w-80 h-[500px] opacity-50 transition-transform duration-700 ease-out will-change-transform"
           style={{
-            transform: `translateX(-${currentSlide * 50}vw)`, // Move 50vw per slide
+            top: '-80px',
+            right: '-60px',
+            transform: `translateY(-${currentSlide * 15}px) rotate(${currentSlide * 2}deg)`,
           }}
         >
-          {/* Continuous background with multiple SVGs */}
-          {[...Array(8)].map((_, i) => (
-            <div key={i} className="w-screen h-full flex-shrink-0 relative">
-              <LivoLines className="w-full h-full opacity-40" />
-            </div>
-          ))}
+          <LivoLines variant={1} className="w-full h-full" />
+        </div>
+
+        {/* Línea 2 - Forma ovalada, centro izquierda */}
+        <div
+          className="absolute w-48 h-48 opacity-40 transition-transform duration-700 ease-out will-change-transform"
+          style={{
+            top: '35%',
+            left: '-40px',
+            transform: `translateY(${currentSlide * 20}px) scale(${1 + currentSlide * 0.02})`,
+          }}
+        >
+          <LivoLines variant={2} className="w-full h-full" />
+        </div>
+
+        {/* Línea 3 - Inferior derecha, se mueve con el scroll */}
+        <div
+          className="absolute w-72 h-[450px] opacity-45 transition-transform duration-700 ease-out will-change-transform"
+          style={{
+            bottom: '-100px',
+            right: '-30px',
+            transform: `translateY(${currentSlide * 25}px) rotate(-${currentSlide * 3}deg)`,
+          }}
+        >
+          <LivoLines variant={3} className="w-full h-full" />
+        </div>
+
+        {/* Línea 2 extra - Superior izquierda pequeña */}
+        <div
+          className="absolute w-32 h-32 opacity-30 transition-transform duration-700 ease-out will-change-transform"
+          style={{
+            top: '15%',
+            left: '10%',
+            transform: `translateX(-${currentSlide * 10}px) rotate(${currentSlide * 5}deg)`,
+          }}
+        >
+          <LivoLines variant={2} className="w-full h-full" />
         </div>
 
         {/* Gradient overlay for depth - stays fixed */}

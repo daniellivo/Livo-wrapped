@@ -5,14 +5,19 @@ import LivoLines from '@/components/LivoLines';
 const InvalidLink = () => {
   return (
     <div className="w-screen h-screen bg-background overflow-hidden relative">
-      {/* Fixed background with LivoLines */}
+      {/* Fixed background with LivoLines - optimizado para móvil */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute inset-0 flex h-full w-max">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="w-screen h-full flex-shrink-0 relative">
-              <LivoLines className="w-full h-full opacity-40" />
-            </div>
-          ))}
+        {/* Línea superior derecha */}
+        <div className="absolute -top-20 -right-20 w-80 h-96 opacity-50">
+          <LivoLines variant={1} className="w-full h-full" />
+        </div>
+        {/* Línea inferior izquierda */}
+        <div className="absolute bottom-20 -left-16 w-56 h-56 opacity-40">
+          <LivoLines variant={2} className="w-full h-full" />
+        </div>
+        {/* Línea inferior derecha */}
+        <div className="absolute -bottom-24 -right-10 w-64 h-80 opacity-45">
+          <LivoLines variant={3} className="w-full h-full" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background/40 z-10" />
       </div>

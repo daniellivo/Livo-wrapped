@@ -12,7 +12,7 @@ import { IconChartBar, IconFlame, IconBuilding, IconHeart, IconReplace } from '@
 import livoLogo from '@/assets/livo-logo.svg';
 import { UserData } from '@/types/user';
 
-const WEBHOOK_URL = 'https://livomarketing.app.n8n.cloud/webhook/e1c955cd-b1a5-4d0c-a023-a876f9a648c3';
+const WEBHOOK_URL = 'https://livomarketing.app.n8n.cloud/webhook-test/70680ec2-1201-4cbb-a998-746206ba7634';
 
 const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);

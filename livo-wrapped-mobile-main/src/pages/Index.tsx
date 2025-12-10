@@ -8,7 +8,7 @@ import LivoLines from '@/components/LivoLines';
 import ProgressDots from '@/components/ProgressDots';
 import StatCard from '@/components/StatCard';
 import ShareButtons from '@/components/ShareButtons';
-import { IconChartBar, IconFlame, IconBuilding, IconHeart, IconDice6 } from '@tabler/icons-react';
+import { IconChartBar, IconFlame, IconBuilding, IconHeart, IconReplace } from '@tabler/icons-react';
 import livoLogo from '@/assets/livo-logo.svg';
 import { UserData } from '@/types/user';
 
@@ -206,7 +206,7 @@ const Index = () => {
       <div className={`transition-opacity duration-500 ${currentSlide === 9 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         <LivoLogo />
       </div>
-      <ProgressDots total={totalSlides} current={currentSlide} />
+      {currentSlide !== 9 && <ProgressDots total={totalSlides} current={currentSlide} />}
 
       <Slider onSlideChange={setCurrentSlide}>
         {/* Slide 1 - Welcome */}
@@ -448,13 +448,13 @@ const Index = () => {
           <div className="min-h-full flex flex-col items-center justify-start px-4 py-6 pb-20">
             {/* Wrapper para posicionar el dado */}
             <div className="relative">
-              {/* Botón dado - fuera de la card */}
+              {/* Botón cambiar enfermera - fuera de la card */}
               <button
                 onClick={handleChangeNurse}
-                className="absolute -top-2 -right-2 z-30 p-2.5 bg-white/20 hover:bg-white/30 text-white rounded-full transition-all duration-200 border border-white/30 hover:border-white/50 shadow-lg backdrop-blur-sm"
+                className="absolute -top-2 -right-2 z-30 p-2.5 bg-white/20 hover:bg-white/30 rounded-full transition-all duration-200 border border-white/30 hover:border-white/50 shadow-lg backdrop-blur-sm"
                 aria-label="Cambiar enfermera"
               >
-                <IconDice6 size={20} className="text-white" />
+                <IconReplace size={20} className="text-[#36C3A0]" />
               </button>
 
               {/* Card exportable - dimensiones fijas para mantener ratios */}

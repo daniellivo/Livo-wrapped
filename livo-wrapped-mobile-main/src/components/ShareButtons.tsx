@@ -1,4 +1,4 @@
-import { IconBrandInstagram, IconDownload, IconBrandWhatsapp, IconLoader2 } from '@tabler/icons-react';
+import { IconDownload, IconLoader2 } from '@tabler/icons-react';
 import html2canvas from 'html2canvas';
 import { toast } from 'sonner';
 import { useState } from 'react';
@@ -63,28 +63,33 @@ const ShareButtons = ({ cardRef }: ShareButtonsProps) => {
     }
   };
 
-  const handleSaveImage = async () => {
-    if (isLoading) return;
-    setIsLoading(true);
-    console.log('Handling Save Image...');
-
+  const shareImage = async (blob: Blob) => {
     try {
-      const blob = await generateImage();
-      if (!blob) {
-        return; // Error ya manejado en generateImage
-      }
+      // Convertimos el Blob en un File
+      const file = new File([blob], 'livo-wrapped.png', { type: 'image/png' });
 
-      // Descargar directamente la imagen
-      downloadDirectly(blob);
+      // Verificamos si el navegador soporta compartir archivos
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Comparte o guarda la imagen',
+          text: 'Guardar en tu galería',
+        });
+        toast.success('¡Imagen compartida!');
+      } else {
+        // Fallback: descargar directamente si no soporta Web Share API
+        downloadDirectly(blob);
+      }
     } catch (error) {
-      console.error('Critical error in handleSaveImage:', error);
-      toast.error('Error inesperado al guardar');
-    } finally {
-      setIsLoading(false);
+      // Si el usuario cancela el share o hay un error, hacer fallback a descarga
+      if ((error as Error).name !== 'AbortError') {
+        console.error('Error sharing image:', error);
+      }
+      downloadDirectly(blob);
     }
   };
 
-  const handleShare = async (platform: 'instagram' | 'whatsapp') => {
+  const handleShareImage = async () => {
     if (isLoading) return;
     setIsLoading(true);
 
@@ -94,57 +99,28 @@ const ShareButtons = ({ cardRef }: ShareButtonsProps) => {
         return; // Error ya manejado en generateImage
       }
 
-      // Por ahora solo descargamos la imagen
-      // Más adelante implementaremos el compartir
-      downloadDirectly(blob);
-      toast.info('Imagen guardada. ¡Puedes compartirla manualmente!');
+      await shareImage(blob);
     } catch (error) {
-      console.error('Error al compartir:', error);
-      toast.error('Hubo un error al procesar la imagen');
+      console.error('Critical error in handleShareImage:', error);
+      toast.error('Error inesperado al compartir');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="grid grid-cols-3 gap-3 w-full max-w-sm mt-6">
+    <div className="flex justify-center w-full max-w-sm mt-6">
       <button
-        onClick={() => handleShare('instagram')}
+        onClick={handleShareImage}
         disabled={isLoading}
-        className="flex flex-col items-center gap-2 px-4 py-3 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {isLoading ? (
-          <IconLoader2 size={24} className="text-white animate-spin" />
-        ) : (
-          <IconBrandInstagram size={24} className="text-white" />
-        )}
-        <span className="text-xs text-white">Stories</span>
-      </button>
-
-      <button
-        onClick={handleSaveImage}
-        disabled={isLoading}
-        className="flex flex-col items-center gap-2 px-4 py-3 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex flex-col items-center gap-2 px-6 py-3 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isLoading ? (
           <IconLoader2 size={24} className="text-white animate-spin" />
         ) : (
           <IconDownload size={24} className="text-white" />
         )}
-        <span className="text-xs text-white">Guardar</span>
-      </button>
-
-      <button
-        onClick={() => handleShare('whatsapp')}
-        disabled={isLoading}
-        className="flex flex-col items-center gap-2 px-4 py-3 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {isLoading ? (
-          <IconLoader2 size={24} className="text-white animate-spin" />
-        ) : (
-          <IconBrandWhatsapp size={24} className="text-white" />
-        )}
-        <span className="text-xs text-white">WhatsApp</span>
+        <span className="text-sm text-white font-medium">Guardar en galería</span>
       </button>
     </div>
   );

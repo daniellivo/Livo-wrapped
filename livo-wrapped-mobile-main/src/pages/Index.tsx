@@ -315,22 +315,18 @@ const Index = () => {
                 pacientes
               </p>
             </SlideCard>
-
-            <p className="text-white text-base text-center opacity-0 animate-fade-up max-w-xs" style={{ animationDelay: '900ms' }}>
-              {userData.patients_impact_description}
-            </p>
           </div>
         </SlideContent>
 
-        {/* Slide 5 - Centers Quote */}
+        {/* Slide 5 - Impacto pacientes */}
         <SlideContent>
           <div className="flex flex-col items-center gap-8">
-            <span className="text-6xl opacity-0 animate-bounce-in">🏥</span>
+            <span className="text-6xl opacity-0 animate-bounce-in">💫</span>
             <p className="text-center text-2xl font-light leading-relaxed text-white opacity-0 animate-fade-up" style={{ animationDelay: '200ms' }}>
-              Cada centro fue <span className="font-bold text-primary">diferente</span>...
+              Con {userData.total_patients_impacted} pacientes, podrías...
             </p>
-            <p className="text-center text-lg leading-relaxed text-white opacity-0 animate-fade-up" style={{ animationDelay: '400ms' }}>
-              Y cada especialidad, una oportunidad para seguir creciendo profesionalmente.
+            <p className="text-center text-lg leading-relaxed text-white/80 opacity-0 animate-fade-up max-w-xs" style={{ animationDelay: '400ms' }}>
+              {userData.patients_impact_description}
             </p>
           </div>
         </SlideContent>
@@ -373,10 +369,10 @@ const Index = () => {
               </div>
             </SlideCard>
 
-            <SlideCard variant="highlight" delay={400}>
-              <div className="text-center">
-                <p className="text-sm opacity-80">Tu día favorito</p>
-                <p className="text-2xl font-bold mt-1">{userData.most_common_day.toLowerCase()}</p>
+            <SlideCard delay={400}>
+              <div className="flex items-center justify-between">
+                <p className="text-base text-card-foreground">Tu día favorito</p>
+                <span className="text-3xl font-bold gradient-text">{userData.most_common_day.toLowerCase()}</span>
               </div>
             </SlideCard>
 
@@ -408,7 +404,7 @@ const Index = () => {
 
         {/* Slide 9 - Final Result Card (Optimized for Mobile) */}
         <div className="w-full h-full overflow-y-auto overflow-x-hidden">
-          <div className="min-h-full flex flex-col items-center justify-start px-4 py-6 pb-20">
+          <div className="min-h-full flex flex-col items-center justify-start px-4 py-6 pb-24">
             {/* Card exportable - dimensiones fijas para mantener ratios */}
             <div
               ref={cardRef}
@@ -423,10 +419,11 @@ const Index = () => {
               <button
                 onClick={handleChangeNurse}
                 data-html2canvas-ignore="true"
-                className="absolute top-4 right-4 z-30 p-2.5 bg-white/20 hover:bg-white/30 rounded-full transition-all duration-200 border border-white/30 hover:border-white/50 shadow-lg backdrop-blur-sm"
+                className="absolute top-4 right-4 z-30 px-3 py-2 bg-white/20 hover:bg-white/30 rounded-full transition-all duration-200 border border-white/30 hover:border-white/50 shadow-lg backdrop-blur-sm flex items-center gap-1.5"
                 aria-label="Cambiar enfermera"
               >
-                <IconReplace size={20} className="text-[#36C3A0]" />
+                <IconReplace size={16} className="text-[#36C3A0]" />
+                <span className="text-xs font-medium text-[#36C3A0]">Cambiar estilo</span>
               </button>
 
               <div style={{ 

@@ -26,6 +26,8 @@ const ShareButtons = ({ cardRef }: ShareButtonsProps) => {
         logging: false,
         useCORS: true, // Importante para imágenes externas
         allowTaint: true,
+        width: 320,  // Ancho fijo
+        height: 580, // Alto fijo (mismo que la card)
       });
 
       return new Promise((resolve) => {

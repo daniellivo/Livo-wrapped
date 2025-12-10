@@ -453,9 +453,7 @@ const Index = () => {
               style={{
                 background: '#F6F5F4',
                 width: '320px',
-                height: 'calc(80vh)',
-                maxHeight: '640px',
-                minHeight: '500px',
+                height: '580px', // Altura fija en pixeles
               }}
             >
               {/* Botón cambiar enfermera - dentro de la card pero no se exporta */}

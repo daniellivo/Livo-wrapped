@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import confetti from 'canvas-confetti';
 import Slider from '@/components/Slider';
 import SlideContent from '@/components/SlideContent';
 import SlideCard from '@/components/SlideCard';
@@ -28,6 +29,9 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  
+  // Estado para el confetti de la slide 5
+  const [hasShownConfetti, setHasShownConfetti] = useState(false);
 
   // Función para llamar al webhook
   const callWebhook = async (userId: string) => {
@@ -46,10 +50,30 @@ const Index = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Error en la respuesta del servidor: ${response.status}`);
+        const statusText = response.statusText || 'Error desconocido';
+        throw new Error(`Error en la respuesta del servidor: ${response.status} - ${statusText}`);
       }
 
-      const data: UserData = await response.json();
+      // Verificar que la respuesta tenga contenido antes de parsearla
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('La respuesta del servidor no es JSON válido');
+      }
+
+      const text = await response.text();
+      if (!text || text.trim().length === 0) {
+        throw new Error('La respuesta del servidor está vacía');
+      }
+
+      let data: UserData;
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        console.error('Error al parsear JSON:', parseError);
+        console.error('Contenido recibido:', text);
+        throw new Error('Error al procesar los datos del servidor. La respuesta no es JSON válido.');
+      }
+
       setUserData(data);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error desconocido al llamar al webhook';
@@ -71,6 +95,37 @@ const Index = () => {
     
     callWebhook(encodedId);
   }, [searchParams, navigate]);
+
+  // Efecto de confetti cuando entramos en la slide 5 (índice 4) por primera vez
+  useEffect(() => {
+    if (currentSlide === 4 && !hasShownConfetti) {
+      setHasShownConfetti(true);
+      
+      // Función para disparar confetti desde una esquina inferior
+      const fireConfetti = (originX: number) => {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { x: originX, y: 1 },
+          angle: originX < 0.5 ? 60 : 120,
+          startVelocity: 45,
+          gravity: 1,
+          ticks: 200,
+          colors: ['#36C3A0', '#114454', '#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1'],
+        });
+      };
+      
+      // Disparar desde ambas esquinas inferiores
+      fireConfetti(0.1); // Esquina inferior izquierda
+      fireConfetti(0.9); // Esquina inferior derecha
+      
+      // Segunda ráfaga con un pequeño delay
+      setTimeout(() => {
+        fireConfetti(0.15);
+        fireConfetti(0.85);
+      }, 150);
+    }
+  }, [currentSlide, hasShownConfetti]);
 
   // Función para obtener la URL de la enfermera con la variante actual
   const getNurseImageUrl = (originalUrl: string, variant: number): string => {
